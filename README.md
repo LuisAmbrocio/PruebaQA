@@ -1,29 +1,122 @@
-# Prueba de tester 1
-Esta prueba evalúa conocimientos de programación en base a una situación que puede pasar dentro de un proyecto de software.
-## Software necesarios
-* [GIT](https://git-scm.com/downloads)
-* Cualquier navegador WEB
-## Instrucciones antes de empezar
-1.  Crear una cuenta en [Github](https://git-scm.com/book/es/v2/GitHub-Creaci%C3%B3n-y-configuraci%C3%B3n-de-la-cuenta).
-2.  Crear un [fork](https://docs.github.com/es/get-started/quickstart/fork-a-repo) a este repositorio.
-3.  Clonar el repositorio forkeado en tu computadora.
-4.  Úbicate en el repositorio raíz del proyecto (Ubicación del proyecto forkeado en tu computadora).
-5.  Abrir desde del navegador el archivo index.html de este proyecto.
-## Casos de usos
-Un banco financiero implementó el juego, Adivina tu número, la cual consiste en adivinar un número entre 1 al 100 durante 10 intentos. Así mismo para facilitar dicho juego se debe cumplir los siguientes requisitos:
-* El número a adivinar debe pertenecer al conjunto de los enteros (e.g. 1, 2, 3...)
-* El número que ingresará el jugador debe pertenecer al conjunto de los enteros (e.g. 1, 2, 3...), en caso que no ingrese un número entero, debe mostrarse una alerta al usuario y no se debe incrementar un intento de prueba.
-* Sí el número que ingresó el jugador es mayor al número a adivinar, se debe mostrar el siguiente mensaje en color negro: "Incorrecto! El número es mayor!", en caso que sea menor, se debe mostrar: "Incorrecto! El número es menor!".
-* Si después de 10 intentos, el usuario no adivina el número, se debe mostrarse el mensaje de color rojo: "!!!Pérdistes!!!"
-* Si el usuario adivina el número antes de los 10 intentos, se debe mostrar el mensaje de color verde: "Felicitaciones! adivinaste el número!".
-## Situación del proyecto.
-El desarrollador implementó toda la interfaz gráfica, y así mismo la lógica del juego en el archivo index.html (Con HTML, Javascript y CSS), sin embargo el equipo de desarrollo cometió el error de no testear dicho proyecto, y lo colocaron en los servidores de producción. Para su sorpresa, al momento de que el cliente lo vió... ¡NO FUNCIONABA NADA!
-Dado a esta experiencia, el banco financiero contrató a un tester para realizar las pruebas respectivas con la finalidad de que el proyecto funcione correctamente de acuerdo a los requerimientos dados.
-## Plan de ataque
-Como tester debes solucionar este problema en tu repositorio de github, así mismo debe presentarle al equipo de desarrollo todos los errores que fuiste encontrando y corregiendo (i.e. Una breve descripción del error y su solución respectiva). Dentro del archivo test-strategy.md, igualmente el lider del equipo recomendó a cada tester, ver la consola del navegador de web para identificar más rápido los errores del proyecto.
-## Entregables
-Como entregables debe presentar lo siguiente:
-* El archivo index.html corregido de acuerdo a las observaciones de testeo, cabe mencionar que este archivo debe ser funcional (Al momento de abrir el proyecto, debe funcionar de acuerdo a la lógica de negocio planteado en este ejercicio).
-* El plan de ataque test-strategy.md
-## Recursos:
-* Event Target: https://developer.mozilla.org/es/docs/Web/API/EventTarget
+Se agrega codigo corregido del dia 23/05/2023, ya que repositorio no carga las correciones de visual studio.
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Juego de adivina tu número</title>
+
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+      body {
+        width: 50%;
+        max-width: 800px;
+        min-width: 480px;
+        margin: 0 auto;
+      }
+
+	.form input[type="number"] {
+        width: 200px;
+      }
+      .lastResult {
+        color: white;
+        padding: 3px;
+      }
+    </style>
+  </head>
+
+  <body>
+      <h1>Juego Adivina tu número</h1>
+
+      <p>Hemos seleccionado un número aleatorío entre 1 a 100. Trata de adivinar el número, en un total de 10 turnos o menos. No te preocupes, te diremos sí el número es más alto o más bajo </p>
+
+<div class="form">
+  <label for="guessField">Ingresa el número a adivinar: </label><input type="number" min="1" max="100" required id="guessField" class="guessField">
+  <input type="submit" value="Ingresar el número aleatorio" class="guessSubmit">
+</div>
+
+<div class="resultParas">
+  <p class="guesses"></p>
+  <p class="lastResult"></p>
+  <p class="lowOrHi"></p>
+</div>
+
+</body>
+
+<script>
+  let randomNumber = Math.floor(Math.random() * 100) + 1;
+
+  const guesses = document.querySelector('.guesses');
+  const lastResult = document.querySelector('.lastResult');
+  const lowOrHi = document.querySelector('.lowOrHi');
+  const guessSubmit = document.querySelector('.guessSubmit');
+  const guessField = document.querySelector('.guessField');
+
+  let guessCount = 1;
+  let resetButton;
+
+  function checkGuess() {
+
+    const userGuess = Number(guessField.value);
+    if(guessCount === 1) {
+      guesses.textContent = 'Número aleatorio anterior: ';
+    }
+    guesses.textContent += userGuess + ' ';
+
+    if(userGuess === randomNumber) {
+      lastResult.textContent = 'Felicitaciones! adivinaste el número!';
+      lastResult.style.backgroundColor = 'green';
+      lowOrHi.textContent = '';
+      setGameOver();
+    } else if(guessCount === 10) {
+      lastResult.textContent = '!!!Pérdistes!!!';
+      lowOrHi.textContent = '';
+      setGameOver();
+    } else {
+      lastResult.textContent = 'Incorrecto! ';
+      lastResult.style.backgroundColor = 'red';
+      if(userGuess < randomNumber) {
+        lowOrHi.textContent = 'El número es mayor!';
+      } else if(userGuess > randomNumber) {
+        lowOrHi.textContent = 'El número es menor!';
+      }
+    }
+
+    guessCount++;
+    guessField.value = '';
+    guessField.focus();
+  }
+  guessSubmit.addEventListener('click', checkGuess);
+
+  function setGameOver() {
+	  guessField.disabled = true;
+	  guessSubmit.disabled = true;
+	  resetButton = document.createElement('button');
+	  resetButton.textContent = 'Comienza un nuevo juego';
+	  document.body.appendChild(resetButton);
+	  resetButton.addEventListener('click', resetGame);
+  }
+
+  function resetGame() {
+	  guessCount = 1;
+
+	  const resetParas = document.querySelectorAll('.resultParas p');
+	  for(const resetPara of resetParas) {
+		  resetPara.textContent = '';
+	  }
+
+	  resetButton.parentNode.removeChild(resetButton);
+	  guessField.disabled = false;
+	  guessSubmit.disabled = false;
+	  guessField.value = '';
+	  guessField.focus();
+
+	  lastResult.style.backgroundColor = 'white';
+
+	  randomNumber = Math.floor(Math.random()*100) + 1;
+  }
+</script>
+</html>
