@@ -2,8 +2,11 @@ Se agrega codigo corregido del dia 23/05/2023, ya que repositorio no carga las c
 Y se agregan los errores encontrados en el sistema:
 
 Lenguaje no declarado en html
+<br>
 cuerpo de entrada incompleto html
+<br>
 ingreso declarado como text y no como number 
+<br>
 rangos no declarados
 se elimina la constante de intentos y se agrega directa al programa como una limitante
 formula para numero aleatorios incompletas en varias seccion del programa
